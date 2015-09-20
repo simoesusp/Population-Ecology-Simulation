@@ -1,5 +1,5 @@
 PROG_NAME = main
-PROJECT_PATH = Z:/Projects/PopulationEcologySimulation
+PROJECT_PATH = Z:/Projects/PopulationEcologySimulation/Population-Ecology-Simulation
 SOURCE_PATH = $(PROJECT_PATH)/Source
 
 SP_FILES = @main.

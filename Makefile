@@ -4,6 +4,7 @@ SOURCE_PATH = $(PROJECT_PATH)/Source
 
 SP_FILES = @main.
 FILES =
+ARGS = 
 FLAGS = -std=c++11
 
 ALL_FILES = $(SP_FILES)
@@ -20,7 +21,7 @@ DEBUG_FLAGS = -Wall -g
 SFML_RELEASE_PATH = Z:/SFML-ALL/SFML-2.3-ReleaseI
 RELEASE_PATH = $(PROJECT_PATH)/Release
 RELEASE_LIBS = -lsfml-graphics -lsfml-window -lsfml-system
-RELEASE_FLAGS =
+RELEASE_FLAGS = -static-libgcc -static-libstdc++
 
 OBJECT_FILES:= $(ALL_FILES)
 #path substitution
@@ -39,22 +40,23 @@ SOURCE_FILES:= $(SP_FILES) $(SM_FILES) $(SO_FILES)
 space:= .
 SOURCE_FILES:= $(subst $(space),.cpp,$(SOURCE_FILES))
 
-all:
+all: compiledebug builddebug rundebug
+
+alldebug: compiledebug builddebug rundebug
+allrelease: compilerelease buildrelease runrelease
+
+help:
 	@echo avaiable options:
 	@echo 	===DEBUG===
 	@echo 	compiledebug
-	@echo 	cpartdebug FILES=example.cpp ...
+	@echo 	cpartdebug FILES="example.cpp ..."
 	@echo 	builddebug
 	@echo 	rundebug
 	@echo 	===RELEASE===
 	@echo 	compilerelease
-	@echo 	cpartrelease FILES=example.cpp ...
+	@echo 	cpartrelease FILES="example.cpp ..."
 	@echo 	buildrelease
 	@echo 	runrelease
-
-pathhelp:
-	@echo "&S" = SOURCE_PATH/
-	@echo "&SO" = SOURCE_PATH/Objects/
 
 compiledebug:
 	cd ${DEBUG_PATH}/Compiled && g++ ${SOURCE_FILES} -c ${FLAGS} ${DEBUG_FLAGS} -I${SFML_DEBUG_PATH}/include
@@ -75,10 +77,10 @@ buildrelease:
 	cd ${RELEASE_PATH}/Compiled && g++ ${OBJECT_FILES} -o ${RELEASE_PATH}/Executable/${PROG_NAME} ${FLAGS} ${RELEASE_FLAGS} -I${SFML_RELEASE_PATH}/include -L${SFML_RELEASE_PATH}/lib ${RELEASE_LIBS}
 	
 rundebug:
-	${DEBUG_PATH}/Executable/${PROG_NAME}.exe
+	${DEBUG_PATH}/Executable/${PROG_NAME}.exe ${ARGS}
 
 runrelease:
-	${RELEASE_PATH}/Executable/${PROG_NAME}.exe
+	${RELEASE_PATH}/Executable/${PROG_NAME}.exe ${ARGS}
 
 debugit:
 	gdb ${DEBUG_PATH}/Executable/${PROG_NAME}

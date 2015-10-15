@@ -1,0 +1,7 @@
+simulation_duration: 30
+arena_height: 600
+arena_width: 600
+oxygenCarbonRatio: .5
+producer_amount: 40
+herbivore_amount: 10
+detritivore_amount: 10

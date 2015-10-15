@@ -3,6 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include <cstdlib>
 #include <ctime>
+
+#include <sstream>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <map>
+
+
 #define ENTITY_POOL_SIZE 256
 #define SPECIES_AMOUNT 3
 #define MIN_REPRODUCTION_ENERGY 1500
@@ -31,7 +39,7 @@ typedef int Type;
 
 
 typedef struct speciesProperties{
-//if > 0: Oxygen comsumer/ if < 0: carbondioxide comsumer
+//if > 0: Oxygen consumer/ if < 0: carbondioxide consumer
 	double oxygenCarbonConsumption;
 	double speed;
 	double size;
@@ -138,15 +146,42 @@ int main(int argc, char **argv)
 	// 	return 1;
 	// }
 	
-	double sim_duration = 1000; //= atof(argv[SIMTIME]);
-	int shrimp_amount 	= 10; //= atoi(argv[SHRIMP_AMOUNT]);
-	int algae_amount 	= 40; //= atoi(argv[ALGAE_AMOUNT]);
-	int bacteria_amount = 10; //= atoi(argv[BACTERIA_AMOUNT]);
+	std::map <std::string, double> initial_values;
+	initial_values["simulation_duration"] 	= 30;
+	initial_values["arena_height"]			= 600;
+	initial_values["arena_width"]			= 600;
+	initial_values["oxygenCarbonRatio"]		= .5;
+	initial_values["producer_amount"] 		= 40;
+	initial_values["herbivore_amount"] 		= 10;
+	initial_values["detritivore_amount"] 	= 10;
 	
-	if(shrimp_amount + algae_amount + bacteria_amount > 255)
+	
+	// 	if(shrimp_amount + algae_amount + bacteria_amount > 255)
+	// {
+	// 	printf("Too many individuals! 255 maximum!\n");
+	// }
+	
+	
+	
+	std::string line;
+	std::string name, amount;
+	std::ifstream readFile("sim_data.in");
+	
+	if(readFile.is_open())
 	{
-		printf("Too many individuals! 255 maximum!\n");
+		std::cout << "File opened";
 	}
+	while(std::getline(readFile,line))
+	{
+	    std::stringstream iss(line);
+	    std::getline(iss, name, ':');
+	    std::getline(iss, amount);
+	    initial_values[name] = std::stod(amount);
+	    std::cout << name << " ";
+	    std::cout << initial_values[name] << std::endl;
+	}
+	readFile.close();
+	
 	
 	World world;
 	Entity entityPool[ENTITY_POOL_SIZE];
@@ -154,11 +189,17 @@ int main(int argc, char **argv)
 	
 	srand(time(NULL));
 	
-	initializeWorld(world, 0.5, 10000, 100000, 600, 600);
+	
+	initializeWorld(world, initial_values["oxygenCarbonRatio"], 10000, 100000, 
+										initial_values["arena_height"], initial_values["arena_width"]);
+	
 	initializeSpeciesProperties(speciesProperties);
 	
-	initializeCommunity(world, speciesProperties, entityPool, shrimp_amount, algae_amount, bacteria_amount);
-	simulationLoop(world, speciesProperties, entityPool, sf::seconds(sim_duration), sf::seconds(1/60), sf::seconds(1/60));
+	initializeCommunity(world, speciesProperties, entityPool, initial_values["herbivore_amount"], 
+								initial_values["producer_amount"], initial_values["detritivore_amount"]);
+	
+	simulationLoop(world, speciesProperties, entityPool, 
+				sf::seconds(initial_values["simulation_duration"]), sf::seconds(1/60), sf::seconds(1/60));
 	
 	
 	return 0;

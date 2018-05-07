@@ -4,7 +4,7 @@ SETUP
 Configuring user information used across all local repositories
 git config --global user.name “[firstname lastname]”
 set a name that is identifiable for credit when review version history
-
+Feliz esteve aqui
 git config --global user.email “[valid-email]”
 set an email address that will be associated with each history marker
 
@@ -13,7 +13,7 @@ set automatic command line coloring for Git for easy reviewing
 
 sdlfas;dfasldfjaslkdfasldf as;dlf kasldd f;lasa dkf;lasd f
 
-SETUP & INIT 
+SETUP & INIT
 
 Obs.: 	- Ou usa git init   ou  usa  git clone
 		- Nao precisa criar pasta antes de dar o git clone,pois ele cria pasta com o nome do repositorio!!
